@@ -16,6 +16,10 @@ dotenv.config();
 const PORT = process.env.PORT;
 const __dirname = path.resolve();
 
+app.get("/", (req, res) => {
+  res.send("Server is live now 🎉🎉")
+})
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(
