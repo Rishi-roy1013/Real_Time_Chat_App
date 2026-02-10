@@ -20,10 +20,14 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://real-time-chat-app-mn0p.onrender.com",
     credentials: true,
   })
 );
+
+app.get("/", (req, res) => {
+  res.send("Server is live Now🎉🎉")
+})
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
