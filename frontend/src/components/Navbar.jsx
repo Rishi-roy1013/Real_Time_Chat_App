@@ -1,52 +1,66 @@
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
-import { LogOut, MessageSquare, Settings, User } from "lucide-react";
+import { LogOut, MessageSquare, Sparkles, User } from "lucide-react";
 
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
 
   return (
     <header
-      className="bg-base-100 border-b border-base-300 fixed w-full top-0 z-40 
-    backdrop-blur-lg bg-base-100/80"
+      className="fixed top-0 z-40 w-full border-b border-white/10 bg-slate-950/70 backdrop-blur-2xl"
     >
-      <div className="container mx-auto px-4 h-16">
-        <div className="flex items-center justify-between h-full">
-          <div className="flex items-center gap-8">
-            <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-all">
-              <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                <MessageSquare className="w-5 h-5 text-primary" />
+      <div className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-4">
+          <Link to="/" className="flex items-center gap-3 transition hover:opacity-90">
+            <div className="flex size-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 text-slate-950 shadow-lg shadow-cyan-500/20">
+              <MessageSquare className="size-5" />
+            </div>
+            <div>
+              <h1 className="text-lg font-bold leading-none">Chatty</h1>
+              <p className="mt-1 hidden text-xs uppercase tracking-[0.24em] text-white/45 sm:block">
+                Modern conversation hub
+              </p>
+            </div>
+          </Link>
+
+          <div className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/70 md:flex">
+            <Sparkles className="size-4 text-cyan-300" />
+            Cleaner chat experience
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 sm:gap-3">
+          {authUser && (
+            <>
+              <div className="hidden items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-2 lg:flex">
+                <img
+                  src={authUser.profilePic || "/avatar.png"}
+                  alt={authUser.fullName}
+                  className="size-9 rounded-full object-cover"
+                />
+                <div className="min-w-0">
+                  <p className="max-w-32 truncate text-sm font-semibold">{authUser.fullName}</p>
+                  <p className="text-xs text-white/55">Ready to chat</p>
+                </div>
               </div>
-              <h1 className="text-lg font-bold">Chatty</h1>
-            </Link>
-          </div>
 
-          <div className="flex items-center gap-2">
-            <Link
-              to={"/settings"}
-              className={`
-              btn btn-sm gap-2 transition-colors
-              
-              `}
-            >
-              <Settings className="w-4 h-4" />
-              <span className="hidden sm:inline">Settings</span>
-            </Link>
+              <Link
+                to="/profile"
+                className="inline-flex h-11 items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 text-sm font-medium transition hover:bg-white/10"
+              >
+                <User className="size-4" />
+                <span className="hidden sm:inline">Profile</span>
+              </Link>
 
-            {authUser && (
-              <>
-                <Link to={"/profile"} className={`btn btn-sm gap-2`}>
-                  <User className="size-5" />
-                  <span className="hidden sm:inline">Profile</span>
-                </Link>
-
-                <button className="flex gap-2 items-center" onClick={logout}>
-                  <LogOut className="size-5" />
-                  <span className="hidden sm:inline">Logout</span>
-                </button>
-              </>
-            )}
-          </div>
+              <button
+                className="inline-flex h-11 items-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-500 px-4 text-sm font-medium text-slate-950 transition hover:opacity-90"
+                onClick={logout}
+              >
+                <LogOut className="size-4" />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
+            </>
+          )}
         </div>
       </div>
     </header>

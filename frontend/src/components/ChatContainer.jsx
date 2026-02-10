@@ -44,10 +44,10 @@ const ChatContainer = () => {
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-auto">
+    <div className="flex flex-1 flex-col overflow-hidden bg-[linear-gradient(180deg,rgba(34,211,238,0.04),rgba(255,255,255,0))]">
       <ChatHeader />
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 space-y-4 overflow-y-auto bg-transparent px-4 py-5 sm:px-6">
         {messages.map((message) => (
           <div
             key={message._id}
@@ -67,19 +67,25 @@ const ChatContainer = () => {
               </div>
             </div>
             <div className="chat-header mb-1">
-              <time className="text-xs opacity-50 ml-1">
+              <time className="ml-1 text-xs opacity-50">
                 {formatMessageTime(message.createdAt)}
               </time>
             </div>
-            <div className="chat-bubble flex flex-col">
+            <div
+              className={`chat-bubble flex max-w-xs flex-col rounded-3xl border px-1 py-1 shadow-sm sm:max-w-md ${
+                message.senderId === authUser._id
+                  ? "border-primary/20 bg-primary text-primary-content"
+                  : "border-white/10 bg-white/5 text-white"
+              }`}
+            >
               {message.image && (
                 <img
                   src={message.image}
                   alt="Attachment"
-                  className="sm:max-w-[200px] rounded-md mb-2"
+                  className="mb-2 rounded-2xl sm:max-w-[220px]"
                 />
               )}
-              {message.text && <p>{message.text}</p>}
+              {message.text && <p className="px-3 py-2 leading-6">{message.text}</p>}
             </div>
           </div>
         ))}

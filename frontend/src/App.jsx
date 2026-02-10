@@ -8,21 +8,31 @@ import ProfilePage from "./pages/ProfilePage";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "./store/useAuthStore";
-import { useThemeStore } from "./store/useThemeStore";
 import { useEffect } from "react";
+import { useCallStore } from "./store/useCallStore";
 
 import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
+import CallInterface from "./components/CallInterface";
 
 const App = () => {
-  const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
-  const { theme } = useThemeStore();
+  const { authUser, checkAuth, isCheckingAuth, onlineUsers, socket } = useAuthStore();
+  const { initializeCallListeners, resetCallState } = useCallStore();
 
   console.log({ onlineUsers });
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
+
+  useEffect(() => {
+    if (!socket) {
+      resetCallState();
+      return;
+    }
+
+    initializeCallListeners(socket);
+  }, [initializeCallListeners, resetCallState, socket]);
 
   console.log({ authUser });
 
@@ -34,7 +44,7 @@ const App = () => {
     );
 
   return (
-    <div data-theme={theme}>
+    <div data-theme="night">
       <Navbar />
 
       <Routes>
@@ -45,6 +55,7 @@ const App = () => {
         <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
       </Routes>
 
+      <CallInterface />
       <Toaster />
     </div>
   );
