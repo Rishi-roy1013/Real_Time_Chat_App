@@ -2,11 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-
 import path from "path";
 
 import { connectDB } from "./lib/db.js";
-
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import { app, server } from "./lib/socket.js";
@@ -15,23 +13,30 @@ dotenv.config();
 
 const PORT = process.env.PORT;
 const __dirname = path.resolve();
-
-app.get("/", (req, res) => {
-  res.send("Server is live now 🎉🎉")
-})
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://real-time-chat-app-mn0p.onrender.com",
+].filter(Boolean);
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://real-time-chat-app-mn0p.onrender.com",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   })
 );
 
 app.get("/", (req, res) => {
-  res.send("Server is live Now🎉🎉")
-})
+  res.send("Server is live now");
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
