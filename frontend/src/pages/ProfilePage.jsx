@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Camera, Mail, User } from "lucide-react";
+import toast from "react-hot-toast";
 
 const ProfilePage = () => {
   const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
@@ -9,6 +10,12 @@ const ProfilePage = () => {
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image size must be less than 5MB");
+      return;
+    }
 
     const reader = new FileReader();
 
@@ -35,7 +42,7 @@ const ProfilePage = () => {
           <div className="flex flex-col items-center gap-4">
             <div className="relative">
               <img
-                src={selectedImg || authUser.profilePic || "/avatar.png"}
+                src={selectedImg || authUser?.profilePic || "/avatar.png"}
                 alt="Profile"
                 className="size-32 rounded-full object-cover border-4 border-cyan-400/30"
               />
@@ -71,7 +78,7 @@ const ProfilePage = () => {
                 <User className="w-4 h-4" />
                 Full Name
               </div>
-              <p className="px-4 py-2.5 bg-slate-950/40 rounded-2xl border border-white/10">{authUser?.fullName}</p>
+              <p className="px-4 py-2.5 bg-slate-950/40 rounded-2xl border border-white/10">{authUser?.fullName || "N/A"}</p>
             </div>
 
             <div className="space-y-1.5">
@@ -79,7 +86,7 @@ const ProfilePage = () => {
                 <Mail className="w-4 h-4" />
                 Email Address
               </div>
-              <p className="px-4 py-2.5 bg-slate-950/40 rounded-2xl border border-white/10">{authUser?.email}</p>
+              <p className="px-4 py-2.5 bg-slate-950/40 rounded-2xl border border-white/10">{authUser?.email || "N/A"}</p>
             </div>
           </div>
 
@@ -88,7 +95,7 @@ const ProfilePage = () => {
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between py-2 border-b border-white/10">
                 <span>Member Since</span>
-                <span>{authUser.createdAt?.split("T")[0]}</span>
+                <span>{authUser?.createdAt ? new Date(authUser.createdAt).toLocaleDateString() : "N/A"}</span>
               </div>
               <div className="flex items-center justify-between py-2">
                 <span>Account Status</span>
